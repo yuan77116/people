@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 /// <summary>
 ///     攻擊系統
+///     變身模式
 /// </summary>
 public class 上半身 : MonoBehaviour
 {
@@ -49,7 +50,18 @@ public class 上半身 : MonoBehaviour
     private void 左點擊vo()
     {
         print("左點擊時間" + 左長壓時長);
-
+        //變身後
+        //bool 使用變身 = GameObject.Find("變身系統").GetComponent<變身>().變身bo;
+        bool 使用變身 = 變身.變身bo;
+        if (使用變身)
+        {
+            ani.SetBool("變身", true);
+        }
+        else
+        {
+            ani.SetBool("變身", false);
+        }
+        //變身前
         if (Input.GetMouseButton(0))
         {
             左長壓時長 += 1 * Time.deltaTime;
