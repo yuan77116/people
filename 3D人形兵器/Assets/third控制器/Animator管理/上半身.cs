@@ -3,6 +3,8 @@
  */
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using System.Collections;
 /// <summary>
 ///     攻擊系統
 ///     變身模式
@@ -19,6 +21,11 @@ public class 上半身 : MonoBehaviour
     public float 左集interval = 1f;
     [Header("攻集"), Range(0, 10)]
     public int 左段總長 = 3;
+    public float[] 攻擊力 ={10,20,30,40 };
+    public Vector3[] 攻擊判定位置;
+    public Vector3[] 攻擊判定大小;
+    public Color[] 顏色;
+    public float[] 攻擊延遲;
     #endregion
 
     #region 私人
@@ -49,7 +56,6 @@ public class 上半身 : MonoBehaviour
     #region 方法：私人
     private void 左點擊vo()
     {
-        print("左點擊時間" + 左長壓時長);
         //變身後
         //bool 使用變身 = GameObject.Find("變身系統").GetComponent<變身>().變身bo;
         bool 使用變身 = 變身.變身bo;
@@ -69,6 +75,7 @@ public class 上半身 : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            print("左點擊時間" + 左長壓時長);
             if (左長壓時長 >= 左集interval)        //長點
             {
                 左集氣攻擊();
@@ -80,9 +87,19 @@ public class 上半身 : MonoBehaviour
             左長壓時長 = 0;
         }
     }
+    private IEnumerator 擊中目標(int 擊中編號)
+    {
+        yield return new WaitForSeconds(攻擊延遲[擊中編號]);
+        Collider[] hits = Physics.OverlapBox(transform.position + transform.right 
+            * 攻擊判定位置[擊中編號].x + transform.up * 攻擊判定位置[擊中編號].y + transform.forward 
+            * 攻擊判定位置[擊中編號].z, 攻擊判定大小[擊中編號] / 2, Quaternion.identity, 1 << 6);
+        hits[0].GetComponent<受傷系統>().受傷(攻擊力[擊中編號]);
+        //print(hits[0].name);
+    }
     private void 左集氣攻擊()
     {
         ani.SetTrigger("左集氣");
+        StartCoroutine(擊中目標(3));
     }
     private void 左攻擊()
     {
@@ -90,6 +107,7 @@ public class 上半身 : MonoBehaviour
         {
             CancelInvoke("恢復左段數");
             Invoke("恢復左段數", 左intervalwait[左段位]);
+            StartCoroutine(擊中目標(左段位));
             左段位++;
         }
         else
@@ -104,6 +122,18 @@ public class 上半身 : MonoBehaviour
     {
         左段位 = 0;
         ani.SetInteger(parAttackPark, 左段位);
+    }
+    private void OnDrawGizmos()
+    {
+        for (int i = 0; i < 攻擊力.Length; i++)
+        {
+            Gizmos.color = 顏色[i];
+            Gizmos.matrix = Matrix4x4.TRS(transform.position + transform.right 
+                * 攻擊判定位置[i].x + transform.up 
+                * 攻擊判定位置[i].y + transform.forward 
+                * 攻擊判定位置[i].z, transform.rotation, transform.localScale);
+            Gizmos.DrawCube(Vector3.zero, 攻擊判定大小[i]);
+        }
     }
     #endregion
 

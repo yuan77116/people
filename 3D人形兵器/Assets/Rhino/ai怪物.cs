@@ -86,11 +86,6 @@ public class ai怪物 : MonoBehaviour
     {
         yield return new WaitForSeconds(攻擊延遲);
         Collider[]hits= Physics.OverlapBox(transform.position + transform.right * 攻擊判定位置.x + transform.up * 攻擊判定位置.y + transform.forward * 攻擊判定位置.z, 攻擊判定大小/2,Quaternion.identity,1<<3);
-        //print(hits[0].name);
-        //if (hits[0].tag == "Player")
-        //{
-
-        //}
         hits[0].GetComponent<受傷系統>().受傷(攻擊力);
     }
     private void 面相目標()
