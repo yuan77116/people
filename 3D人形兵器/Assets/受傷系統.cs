@@ -13,6 +13,7 @@ public class 受傷系統 : MonoBehaviour
     public UnityEvent 死亡後;
     public UnityEvent 受傷後;
     public Image imagehp;
+    public bool 傳訊息完成任務bo;
     private float hpmax;
     private void Awake()
     {
@@ -34,6 +35,10 @@ public class 受傷系統 : MonoBehaviour
     {
         ani.SetBool(dead, true);
         hp = 0;
+        if (傳訊息完成任務bo)
+        {
+            任務管理.ins.更新任務完成數量(1);
+        }
         死亡後.Invoke();
     }
     public void 更新血條()

@@ -75,7 +75,7 @@ public class 上半身 : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            print("左點擊時間" + 左長壓時長);
+            //print("左點擊時間" + 左長壓時長);
             if (左長壓時長 >= 左集interval)        //長點
             {
                 左集氣攻擊();
@@ -93,8 +93,11 @@ public class 上半身 : MonoBehaviour
         Collider[] hits = Physics.OverlapBox(transform.position + transform.right 
             * 攻擊判定位置[擊中編號].x + transform.up * 攻擊判定位置[擊中編號].y + transform.forward 
             * 攻擊判定位置[擊中編號].z, 攻擊判定大小[擊中編號] / 2, Quaternion.identity, 1 << 6);
-        hits[0].GetComponent<受傷系統>().受傷(攻擊力[擊中編號]);
-        //print(hits[0].name);
+        if (hits.Length > 0)
+        {
+            hits[0].GetComponent<受傷系統>().受傷(攻擊力[擊中編號]);
+            //print(hits[0].name);
+        }
     }
     private void 左集氣攻擊()
     {
